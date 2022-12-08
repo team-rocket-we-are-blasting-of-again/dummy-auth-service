@@ -1,6 +1,7 @@
 package com.teamrocket.server;
 
-import com.teamrocket.service.AuthService;
+import com.teamrocket.service.CustomerService;
+import com.teamrocket.service.UserService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
@@ -15,10 +16,18 @@ public class GrpcServer {
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = ServerBuilder
                 .forPort(9000)
-                .addService(new AuthService()).build();
+                .addService(new UserService()).build();
+
+        Server customerServer = ServerBuilder
+                .forPort(9066)
+                .addService(new CustomerService()).build();
 
         server.start();
         LOGGER.info("Server started on port {}", server.getPort());
-        server.awaitTermination();
+
+
+        customerServer.start();
+        LOGGER.info("customerServer started on port {}", customerServer.getPort());
+        customerServer.awaitTermination();  server.awaitTermination();
     }
 }
